@@ -14,10 +14,17 @@ import dagger.hilt.android.components.ActivityComponent
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
+/**
+ * This class contains the hilt dependency injection module.
+ */
 @Module
 @InstallIn(ActivityComponent::class)
 object DiModule {
 
+    /**
+     * Provides base api.
+     * @return BaseApi: instance
+     */
     @Provides
     fun provideBaseApi() : BaseApi{
         val retrofit = Retrofit.Builder()
@@ -32,9 +39,19 @@ object DiModule {
         return retrofit.create(BaseApi::class.java)
     }
 
+    /**
+     * Provides base repository.
+     * @param baseApi: base api instance.
+     * @return BaseRepository: instance
+     */
     @Provides
     fun providesBaseRepository(baseApi: BaseApi): BaseRepository = BaseRepository(baseApi = baseApi)
 
+    /**
+     * Provides base view model.
+     * @param baseBaseRepository: base repository instance.
+     * @return BaseViewModel: instance
+     */
     @Provides
     fun provideBaseViewModel(baseBaseRepository: BaseRepository): BaseViewModel = BaseViewModel(baseRepository = baseBaseRepository)
 

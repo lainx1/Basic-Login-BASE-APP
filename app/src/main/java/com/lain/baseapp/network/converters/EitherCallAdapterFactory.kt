@@ -20,6 +20,9 @@ import java.io.IOException
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
+/**
+ * This class convert the retrofit default response to an either response.
+ */
 internal class EitherCallAdapterFactory : CallAdapter.Factory() {
 
     override fun get(

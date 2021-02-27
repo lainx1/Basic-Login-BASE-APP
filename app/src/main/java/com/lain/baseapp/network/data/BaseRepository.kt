@@ -6,8 +6,17 @@ import com.lain.baseapp.network.BaseApi
 import com.lain.baseapp.network.model.ApiError
 import javax.inject.Inject
 
+/**
+ * This class is a base functional repository.
+ * @param baseApi: a base api instance.
+ */
 class BaseRepository @Inject constructor(private val baseApi: BaseApi){
 
+    /**
+     * Send a functional sample to an api.
+     * @param name: any name.
+     * @return Either: the api response
+     */
     suspend fun requestGet(name: String): Either<ApiError, Model>{
         return baseApi.requestGet(name = name)
     }

@@ -7,11 +7,21 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.loader.*
 import javax.inject.Inject
 
+/**
+ * This class is the main activity.
+ */
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {
 
+    /**
+     * The base view model.
+     */
     @Inject
     lateinit var baseViewModel: BaseViewModel
+
+    /*==============================================================================================
+    ANDROID METHODS
+    ==============================================================================================*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
