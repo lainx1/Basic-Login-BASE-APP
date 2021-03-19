@@ -2,9 +2,11 @@ package com.lain.baseapp.view.activity
 
 import android.os.Bundle
 import com.lain.baseapp.R
+import com.lain.baseapp.view.Router
 import com.lain.baseapp.viewmodel.BaseViewModel
+import com.lain.baseapp.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.loader.*
+import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 /**
@@ -19,6 +21,7 @@ class MainActivity : BaseActivity() {
     @Inject
     lateinit var baseViewModel: BaseViewModel
 
+
     /*==============================================================================================
     ANDROID METHODS
     ==============================================================================================*/
@@ -27,18 +30,25 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        baseViewModel!!.loading.observe(this, {
-            showLoader(loader = loader, loading =  it)
-        })
-
-        baseViewModel!!.error.observe(this, {
-            handleApiError(error = it)
-        })
-
-        baseViewModel!!.model.observe(this){
-            //TODO do something
+        /**
+         * Validate that are 1 user login
+         */
+        val user = intent.getStringExtra(Router.Extras.USER.name)
+        if(user == null) {
+            Router.goToLogin(context = this)
+            finish()
         }
 
-        baseViewModel.requestGet(name = "ditto")
+        userTV.text = user
+
+    }
+
+    override fun onStart() {
+
+        super.onStart()
+        logoutBTN.setOnClickListener {
+            Router.goToLogin(context = this)
+            finish()
+        }
     }
 }

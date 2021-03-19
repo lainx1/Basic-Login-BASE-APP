@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lain.baseapp.model.Model
 import com.lain.baseapp.network.data.BaseRepository
-import com.lain.baseapp.network.model.ApiError
+import com.lain.baseapp.network.model.AppError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -22,7 +22,7 @@ class BaseViewModel @Inject constructor(private val baseRepository: BaseReposito
     /**
      * A live data error.
      */
-    private val _error = MutableLiveData<ApiError>()
+    private val _error = MutableLiveData<AppError>()
 
     /**
      * A live data for loading.
@@ -37,7 +37,7 @@ class BaseViewModel @Inject constructor(private val baseRepository: BaseReposito
     /**
      * The entry to error.
      */
-    val error: LiveData<ApiError> get() = _error
+    val error: LiveData<AppError> get() = _error
 
     /**
      * The entry to loading data.

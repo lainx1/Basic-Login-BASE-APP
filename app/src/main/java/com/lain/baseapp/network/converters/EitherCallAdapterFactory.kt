@@ -4,10 +4,10 @@ import arrow.core.Either
 import arrow.core.Left
 import arrow.core.Right
 
-import com.lain.baseapp.network.model.ApiError
+import com.lain.baseapp.network.model.AppError
 import com.lain.baseapp.network.model.HttpError
 import com.lain.baseapp.network.model.NetworkError
-import com.lain.baseapp.network.model.UnknownApiError
+import com.lain.baseapp.network.model.UnknownAppError
 
 import okhttp3.Request
 import okio.Timeout
@@ -38,7 +38,7 @@ internal class EitherCallAdapterFactory : CallAdapter.Factory() {
         check(responseType is ParameterizedType) { "Response type must be a parameterized type." }
 
         val leftType = getParameterUpperBound(0, responseType)
-        if (getRawType(leftType) != ApiError::class.java) return null
+        if (getRawType(leftType) != AppError::class.java) return null
 
         val rightType = getParameterUpperBound(1, responseType)
         return EitherCallAdapter<Any>(rightType)
@@ -48,9 +48,9 @@ internal class EitherCallAdapterFactory : CallAdapter.Factory() {
 
 private class EitherCallAdapter<R>(
     private val successType: Type
-) : CallAdapter<R, Call<Either<ApiError, R>>> {
+) : CallAdapter<R, Call<Either<AppError, R>>> {
 
-    override fun adapt(call: Call<R>): Call<Either<ApiError, R>> = EitherCall(call, successType)
+    override fun adapt(call: Call<R>): Call<Either<AppError, R>> = EitherCall(call, successType)
 
     override fun responseType(): Type = successType
 
@@ -59,16 +59,16 @@ private class EitherCallAdapter<R>(
 private class EitherCall<R>(
     private val delegate: Call<R>,
     private val successType: Type
-) : Call<Either<ApiError, R>> {
+) : Call<Either<AppError, R>> {
 
-    override fun enqueue(callback: Callback<Either<ApiError, R>>) = delegate.enqueue(
+    override fun enqueue(callback: Callback<Either<AppError, R>>) = delegate.enqueue(
         object : Callback<R> {
 
             override fun onResponse(call: Call<R>, response: Response<R>) {
                 callback.onResponse(this@EitherCall, Response.success(response.toEither()))
             }
 
-            private fun Response<R>.toEither(): Either<ApiError, R> {
+            private fun Response<R>.toEither(): Either<AppError, R> {
                 // Http error response (4xx - 5xx)
                 if (!isSuccessful) {
                     val errorBody = errorBody()?.string() ?: ""
@@ -82,17 +82,17 @@ private class EitherCall<R>(
                 // e.g. in case of 204 No Content
                 return if (successType == Unit::class.java) {
                     @Suppress("UNCHECKED_CAST")
-                    Right(Unit) as Either<ApiError, R>
+                    Right(Unit) as Either<AppError, R>
                 } else {
                     @Suppress("UNCHECKED_CAST")
-                    Left(UnknownError("Response body was null")) as Either<ApiError, R>
+                    Left(UnknownError("Response body was null")) as Either<AppError, R>
                 }
             }
 
             override fun onFailure(call: Call<R>, throwable: Throwable) {
                 val error = when (throwable) {
                     is IOException -> NetworkError(throwable)
-                    else -> UnknownApiError(throwable)
+                    else -> UnknownAppError(throwable)
                 }
                 callback.onResponse(this@EitherCall, Response.success(Left(error)))
             }
@@ -101,13 +101,13 @@ private class EitherCall<R>(
 
     override fun isExecuted(): Boolean = delegate.isExecuted
 
-    override fun clone(): Call<Either<ApiError, R>> = EitherCall(delegate.clone(), successType)
+    override fun clone(): Call<Either<AppError, R>> = EitherCall(delegate.clone(), successType)
 
     override fun isCanceled(): Boolean = delegate.isCanceled
 
     override fun cancel() = delegate.cancel()
 
-    override fun execute(): Response<Either<ApiError, R>> = throw UnsupportedOperationException()
+    override fun execute(): Response<Either<AppError, R>> = throw UnsupportedOperationException()
 
     override fun request(): Request = delegate.request()
 

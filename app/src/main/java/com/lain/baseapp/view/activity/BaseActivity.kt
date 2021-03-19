@@ -32,7 +32,7 @@ abstract class BaseActivity: AppCompatActivity() {
      * @param error: the error to handle.
      * @param handleErrors: a interface to define the behavior for specific errors, if is null then send to error activity.
      */
-    fun handleApiError(error: ApiError, handleErrors: HandleErrors? = null){
+    fun handleApiError(error: AppError, handleErrors: HandleErrors? = null){
 
         if(error is HttpError){
 
@@ -57,9 +57,7 @@ abstract class BaseActivity: AppCompatActivity() {
             //This is the default behavior
             Router.goToError(context = this, error = "Error: ${error.throwable.message}")
 
-        }else{
-
-            error as UnknownApiError
+        }else if(error is UnknownAppError){
 
             if(handleErrors != null){
                 handleErrors.onNetworkError(throwable = error.throwable)
@@ -69,6 +67,16 @@ abstract class BaseActivity: AppCompatActivity() {
 
             Router.goToError(context = this, error = "Error: ${error.throwable.message}")
 
+        } else {
+            error as InternalAppError
+
+            if(handleErrors != null){
+                handleErrors.onInternalAppError(message = error.message)
+                return
+            }
+
+
+            Router.goToError(context = this, error = "Error: ${error.message}")
         }
     }
 

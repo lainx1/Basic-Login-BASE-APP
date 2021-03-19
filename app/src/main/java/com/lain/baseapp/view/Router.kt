@@ -3,6 +3,7 @@ package com.lain.baseapp.view
 import android.content.Context
 import android.content.Intent
 import com.lain.baseapp.view.activity.ErrorActivity
+import com.lain.baseapp.view.activity.LoginActivity
 import com.lain.baseapp.view.activity.MainActivity
 
 /**
@@ -14,15 +15,30 @@ object Router {
      * The extras passed by activities.
      */
     enum class Extras(extra: String) {
-        ERROR("error")
+        ERROR("error"),
+        USER("user")
     }
 
     /**
      * Go to main activity.
      * @param context: the current context.
      */
-    fun goToMain(context: Context){
+    fun goToMain(context: Context, email: String? = null){
         val intent = Intent(context, MainActivity::class.java)
+
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+
+        if(email != null)
+            intent.putExtra(Extras.USER.name, email)
+
+        context.startActivity(intent)
+    }
+
+    /**
+     *
+     */
+    fun goToLogin(context: Context){
+        val intent = Intent(context, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         context.startActivity(intent)
     }
@@ -35,6 +51,7 @@ object Router {
         val intent = Intent(context, ErrorActivity::class.java)
         intent.putExtra(Extras.ERROR.name, error ?: "")
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+
         context.startActivity(intent)
     }
 }

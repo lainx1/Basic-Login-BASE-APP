@@ -1,8 +1,17 @@
 <resources>
-    <string name="app_name">BaseApp</string>
+    <string name="app_name">Login</string>
 
     <!--ERROR ACTIVITY-->
     <string name="error_activity">Ha ocurrido un error.</string>
     <string name="error_activity_name">Error</string>
     <string name="reconnect">Reconectar</string>
+
+    <!--MAIN ACTIVITY-->
+    <string name="logout">Logout</string>
+
+    <!--LOGIN ACTIVITY-->
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+
 </resources>

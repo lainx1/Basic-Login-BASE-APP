@@ -5,6 +5,7 @@ import com.lain.baseapp.network.BaseApi
 import com.lain.baseapp.network.converters.EitherCallAdapterFactory
 import com.lain.baseapp.network.data.BaseRepository
 import com.lain.baseapp.viewmodel.BaseViewModel
+import com.lain.baseapp.viewmodel.LoginViewModel
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -42,7 +43,7 @@ object DiModule {
     /**
      * Provides base repository.
      * @param baseApi: base api instance.
-     * @return BaseRepository: instance
+     * @return BaseRepository: instance.
      */
     @Provides
     fun providesBaseRepository(baseApi: BaseApi): BaseRepository = BaseRepository(baseApi = baseApi)
@@ -50,9 +51,17 @@ object DiModule {
     /**
      * Provides base view model.
      * @param baseBaseRepository: base repository instance.
-     * @return BaseViewModel: instance
+     * @return BaseViewModel: instance.
      */
     @Provides
     fun provideBaseViewModel(baseBaseRepository: BaseRepository): BaseViewModel = BaseViewModel(baseRepository = baseBaseRepository)
+
+
+    /**
+     * Provides login view model.
+     * @return LoginViewModel: instance.
+     */
+    @Provides
+    fun provideLoginViewModel(): LoginViewModel = LoginViewModel()
 
 }

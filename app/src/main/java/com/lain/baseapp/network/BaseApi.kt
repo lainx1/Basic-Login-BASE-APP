@@ -2,7 +2,7 @@ package com.lain.baseapp.network
 
 import arrow.core.Either
 import com.lain.baseapp.model.Model
-import com.lain.baseapp.network.model.ApiError
+import com.lain.baseapp.network.model.AppError
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -19,6 +19,6 @@ interface BaseApi{
      * @return Either: the api response.
      */
     @GET(value = ENDPOINT)
-    suspend fun requestGet(@Path("name") name: String): Either<ApiError, Model>
+    suspend fun requestGet(@Path("name") name: String): Either<AppError, Model>
 
 }

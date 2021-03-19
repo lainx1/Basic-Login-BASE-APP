@@ -25,4 +25,6 @@ interface HandleErrors {
      * @param throwable: a kotlin error to handle.
      */
     fun unknownApiError(throwable: Throwable)
+
+    fun onInternalAppError(message: String)
 }
